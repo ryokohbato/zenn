@@ -211,6 +211,306 @@ export default class LoginForm extends Vue {}
 
 ![Firefoxでのプレビュー画像](https://raw.githubusercontent.com/ryokohbato/zenn.backdrop-filter-alternative-implementation/images/images/preview-firefox.png)
 
+では、具体的な代替実装について考えたいと思います。まず前提として、`backdrop-filter` を使用せずにぼかしなどの視覚効果を得るために、[`filter`](https://developer.mozilla.org/ja/docs/Web/CSS/filter) を使用することができます。
+
+## clip-pathを用いた実装
+
+おそらくこれが最も思いつきやすく、かつ汎用性も高い案だと思います。[clip-path](https://developer.mozilla.org/ja/docs/Web/CSS/clip-path) は、要素を簡単にクリッピングできるCSSプロパティです。clip-pathを使用して背景効果を与える手順は以下の通りです。
+
+1. 背景を2枚重ね、(説明のために上のものを背景1、下のものを背景2と呼びます) その上にログインフォームを重ねる。
+2. `filter` を用いて背景2に視覚効果をかける。
+3. `clip-path` を用いて背景2をログインフォームと同じ大きさに切り抜く。
+
+では手順ごとにコードを追っていきます。重要な部分のみ抜粋して示しますが、以下のアコーディオンからソースコードの全体を確認できます。
+
+### 1.
+
+背景を2枚重ねてその上にログインフォームを重ねます。
+
+```vue:App.vue
+<div id="app">
+  <Background/>
+  <GlassedBackground class="glassed-background"/>
+  <LoginForm class="login-form"/>
+</div>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import Background from "./components/Background.vue";
+import GlassedBackground from "./components/GlassedBackground.vue";
+import LoginForm from "./components/LoginForm.vue";
+
+@Component({
+  components: {
+    Background,
+    GlassedBackground,
+    LoginForm,
+  },
+})
+export default class App extends Vue {}
+</script>
+
+<style lang="scss">
+#app {
+  position: relative;
+
+  .glassed-background {
+    position: absolute;
+    top: 0;
+  }
+
+  .login-form {
+    position: absolute;
+    top: 0;
+  }
+}
+</style>
+```
+
+```vue:Background.vue
+<template>
+  <div class="background"/>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+
+@Component
+export default class Background extends Vue {}
+</script>
+
+<style scoped lang="scss">
+.background {
+  background-image: url("../assets/background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+}
+</style>
+```
+
+```vue:GlassedBackground.vue
+<template>
+  <div class="background"/>
+</template>
+
+<style scoped lang="scss">
+.background {
+  background-image: url("../assets/background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+}
+</style>
+```
+
+### 2.
+
+`filter` を用いて背景2に視覚効果をかけます。先程と同様、彩度150%・ぼかし12pxの視覚効果をかけます。
+
+```vue:GlassedBackground.vue
+<style scoped lang="scss">
+.background {
+  filter: saturate(1.5) blur(12px);
+}
+</style>
+```
+
+### 3.
+
+`clip-path` を用いて背景2をログインフォームと同じ大きさに切り抜きます。ウィンドウサイズの変更を検知して毎回計算しているだけなので、Vanilla JSでも簡単に書けると思います。
+
+```vue:GlassedBackground.vue
+<script lang="ts">
+export default {
+  data () {
+    return {
+      insetTop: 60,
+      height: window.innerHeight,
+      width: window.innerWidth,
+    }
+  },
+  computed: {
+    insetRight: function () {
+      return (this.width - 400) / 2;
+    },
+    insetBottom: function () {
+      return (this.height - 500 - this.insetTop);
+    },
+    insetLeft: function () {
+      return (this.width - 400) / 2;
+    },
+    clipPath: function () {
+      return {
+        clipPath: `inset(${this.insetTop}px ${this.insetRight}px ${this.insetBottom}px ${this.insetLeft}px round 8px)`,
+      }
+    }
+  },
+  methods: {
+    resizeHandler: function () {
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+    }
+  },
+  mounted () {
+    window.addEventListener('resize', this.resizeHandler);
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.resizeHandler);
+  }
+}
+</script>
+```
+
+ログインフォームと同じ大きさでくり抜くためには、角を8pxの半径で丸める必要がありますが、(ログインフォームには `border-radius: 8px` が設定されている) `inset()` の末尾に `round 8px` を付けることで、角を半径8pxで丸めることが出来ます。
+
+:::details ソースコード全体を確認
+```vue:App.vue
+<template>
+  <div id="app">
+    <Background/>
+    <GlassedBackground class="glassed-background"/>
+    <LoginForm class="login-form"/>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import Background from "./components/Background.vue";
+import GlassedBackground from "./components/GlassedBackground.vue";
+import LoginForm from "./components/LoginForm.vue";
+
+@Component({
+  components: {
+    Background,
+    GlassedBackground,
+    LoginForm,
+  },
+})
+export default class App extends Vue {}
+</script>
+
+<style lang="scss">
+html {
+  background-color: #222;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  text-align: center;
+
+  .glassed-background {
+    position: absolute;
+    top: 0;
+  }
+
+  .login-form {
+    margin-top: 60px;
+    position: absolute;
+    top: 0;
+  }
+}
+</style>
+```
+
+```vue:Background.vue
+<template>
+  <div class="background"/>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+
+@Component
+export default class Background extends Vue {}
+</script>
+
+<style scoped lang="scss">
+.background {
+  background-image: url("../assets/background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+}
+</style>
+```
+
+```vue:GlassedBackground.vue
+<template>
+  <div class="background" :style="clipPath"/>
+</template>
+
+<script lang="ts">
+export default {
+  data () {
+    return {
+      insetTop: 60,
+      height: window.innerHeight,
+      width: window.innerWidth,
+    }
+  },
+  computed: {
+    insetRight: function () {
+      return (this.width - 400) / 2;
+    },
+    insetBottom: function () {
+      return (this.height - 500 - this.insetTop);
+    },
+    insetLeft: function () {
+      return (this.width - 400) / 2;
+    },
+    clipPath: function () {
+      return {
+        clipPath: `inset(${this.insetTop}px ${this.insetRight}px ${this.insetBottom}px ${this.insetLeft}px round 8px)`,
+      }
+    }
+  },
+  methods: {
+    resizeHandler: function () {
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+    }
+  },
+  mounted () {
+    window.addEventListener('resize', this.resizeHandler);
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.resizeHandler);
+  }
+}
+</script>
+
+<style scoped lang="scss">
+.background {
+  background-image: url("../assets/background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: saturate(1.5) blur(12px);
+  height: 100vh;
+  width: 100vw;
+}
+</style>
+```
+:::
+
+この実装は確かにFirefoxでも動きます。
+
 [^1]: [What is Glassmorphism? Create This New Design Effect Using Only HTML and CSS](https://www.freecodecamp.org/news/glassmorphism-design-effect-with-html-css/)
 [^2]: ["backdrop-filter" | Can I use](https://caniuse.com/?search=backdrop-filter)
 [^3]: [bug 1578503](https://bugzilla.mozilla.org/show_bug.cgi?id=1578503)
