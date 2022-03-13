@@ -10,11 +10,11 @@ published: false
 
 # 概要
 
-1月の半ば、Slack上でグラスモーフィズムが話題にあがりました。グラスモーフィズムは、すりガラスのように背景を透かしつつぼかすデザインです。[^1] ここで私は、グラスモーフィズムを素直に実装しても Firefox では動かないのではないか、という話を持ち出しました。
+1月の半ば、[KMC](https://www.kmc.gr.jp) のSlack上でグラスモーフィズムが話題にあがりました。グラスモーフィズムは、すりガラスのように背景を透かしつつぼかすデザインです。[^1] ここで私は、グラスモーフィズムを素直に実装しても Firefox では動かないのではないか、という話を持ち出しました。
 
 ![それはそうと、グラスモーフィズム素直に実装するとFirefoxで動かない説があるんだけどもう対応してたっけ](https://storage.googleapis.com/zenn-user-upload/fd15a8c5a783-20220302.png)
 
-![Can be enabled by setting the layout.css.backdrop-filter.enabled and gfx.webrender.all preference to true in about:config.ふむ](https://storage.googleapis.com/zenn-user-upload/08e0f9434031-20220302.png)
+![Can be enabled by setting the layout.css.backdrop-filter.enabled and gfx.webrender.all preference to true in about:config. ふむ](https://storage.googleapis.com/zenn-user-upload/08e0f9434031-20220302.png)
 
 ![一応黒魔術を使えば実装できたはず (忘れた)](https://storage.googleapis.com/zenn-user-upload/b9a899647a65-20220302.png)
 
