@@ -19,7 +19,7 @@ published: false
 ![一応黒魔術を使えば実装できたはず (忘れた)](https://storage.googleapis.com/zenn-user-upload/b9a899647a65-20220302.png)
 
 
-実際にインターネットで検索してみると、CSS を用いたグラスモーフィズムの実装は `backdrop-filter` を使用する方法ばかりがヒットします。しかし、 `backdrop-filter` はデフォルト設定の場合 Firefox では動きません。[^2] [^3] そこで、`backdrop-filter` を使用せずとも同等の視覚効果を得る方法について考えます。
+実際にインターネットで検索してみると、CSS を用いたグラスモーフィズムの実装は [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter) を使用する方法ばかりがヒットします。しかし、 `backdrop-filter` はデフォルト設定の場合 Firefox では動きません。[^2] [^3] そこで、`backdrop-filter` を使用せずとも同等の視覚効果を得る方法について考えます。
 
 # 本編
 
@@ -64,7 +64,7 @@ html {
 </div>
 ```
 
-そしてCSSですが、フォームの全体に半透明の灰色 (`#2228`) を設定した上で、`backdrop-filter` を使用して彩度150%、ぼかし12pxの背景効果をかけています。
+そしてCSSですが、フォームの全体に半透明の灰色 (`#2228`) を設定した上で、`backdrop-filter` を使用して彩度150%・ぼかし12pxの背景効果をかけています。
 
 ```scss
 .form {
