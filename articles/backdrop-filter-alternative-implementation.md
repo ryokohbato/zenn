@@ -77,7 +77,7 @@ html {
 ```vue:App.vue
 <template>
   <div id="app">
-    <LoginForm></LoginForm>
+    <LoginForm/>
   </div>
 </template>
 
@@ -102,6 +102,10 @@ html {
   background-size: cover;
   height: 100%;
   width: 100%;
+}
+
+body {
+  margin: 0;
 }
 
 #app {
@@ -134,9 +138,7 @@ html {
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class LoginForm extends Vue {
-  @Prop() private msg!: string;
-}
+export default class LoginForm extends Vue {}
 </script>
 
 <style scoped lang="scss">
@@ -188,7 +190,6 @@ export default class LoginForm extends Vue {
         outline: 0;
         transition: all .3s;
       }
-
     }
 
     &__submit {
