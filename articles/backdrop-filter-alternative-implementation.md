@@ -23,7 +23,7 @@ published: false
 
 # 本編
 
-今回は例として、`backdrop-filter` を使用せずに以下のようなログインフォームのデザインを作成することにします。
+今回は例として、`backdrop-filter` を使用せずに以下のようなログインフォームのデザインを作成することにします。Vueを使って書いていますが、素のHTML/CSSでも使える方法です。
 
 ![本記事で解説に使用するデザインのプレビュー画像](https://raw.githubusercontent.com/ryokohbato/zenn.backdrop-filter-alternative-implementation/images/images/preview.png)
 
@@ -121,7 +121,7 @@ body {
 ```vue:components/LoginForm.vue
 <template>
   <div class="form">
-    <img class="icon" src="../assets/ryokohbato.png" alt="" />
+    <img class="icon" src="../assets/ryokohbato.png" alt="ryokohbato's icon" />
     <p class="name">ryokohbato</p>
     <div class="password">
       <input
@@ -135,7 +135,7 @@ body {
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class LoginForm extends Vue {}
@@ -267,7 +267,7 @@ export default class App extends Vue {}
 </style>
 ```
 
-```vue:Background.vue
+```vue:components/Background.vue
 <template>
   <div class="background"/>
 </template>
@@ -291,7 +291,7 @@ export default class Background extends Vue {}
 </style>
 ```
 
-```vue:GlassedBackground.vue
+```vue:components/GlassedBackground.vue
 <template>
   <div class="background"/>
 </template>
@@ -312,7 +312,7 @@ export default class Background extends Vue {}
 
 `filter` を用いて背景2に視覚効果をかけます。先程と同様、彩度150%・ぼかし12pxの視覚効果をかけます。
 
-```vue:GlassedBackground.vue
+```vue:components/GlassedBackground.vue
 <style scoped lang="scss">
 .background {
   filter: saturate(1.5) blur(12px);
@@ -324,7 +324,7 @@ export default class Background extends Vue {}
 
 `clip-path` を用いて背景2をログインフォームと同じ大きさに切り抜きます。ウィンドウサイズの変更を検知して毎回計算しているだけなので、Vanilla JSでも簡単に書けると思います。
 
-```vue:GlassedBackground.vue
+```vue:components/GlassedBackground.vue
 <script lang="ts">
 export default {
   data () {
@@ -426,7 +426,7 @@ body {
 </style>
 ```
 
-```vue:Background.vue
+```vue:components/Background.vue
 <template>
   <div class="background"/>
 </template>
@@ -450,7 +450,7 @@ export default class Background extends Vue {}
 </style>
 ```
 
-```vue:GlassedBackground.vue
+```vue:components/GlassedBackground.vue
 <template>
   <div class="background" :style="clipPath"/>
 </template>
