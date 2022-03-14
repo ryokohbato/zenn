@@ -221,11 +221,11 @@ export default class LoginForm extends Vue {}
 
 ![](https://storage.googleapis.com/zenn-user-upload/b77e4142558b-20220315.png)
 
-2. `filter` を用いて背景2に視覚効果をかける。
+2. `filter` を用いて背景1に視覚効果をかける。
 
 ![](https://storage.googleapis.com/zenn-user-upload/32661e31aac3-20220315.png)
 
-3. `clip-path` を用いて背景2をログインフォームと同じ大きさに切り抜く。
+3. `clip-path` を用いて背景1をログインフォームと同じ大きさに切り抜く。
 
 ![](https://storage.googleapis.com/zenn-user-upload/1062665a7c9e-20220315.png)
 
@@ -572,8 +572,7 @@ export default {
 
 CSSにいくつかポイントがあります。
 
-- `background: inherit;` を指定して、`background` の値を親から子に継承し続けている。
-- 背景用の要素の `::before` 疑似要素まで `background` を継承し続けたら、`filter` プロパティで視覚効果を適用する。
+- `background: inherit;` を指定して、`background` の値を親から子に継承し続けます。背景用の要素の `::before` 疑似要素まで `background` を継承し続けたら、`filter` プロパティで視覚効果を適用します。
 - ぼかし半径の大きさだけ外側に要素を広げておき、`overflow: hidden;` でその部分を表示しないようにします。そうすることで、要素全体にぼかしが十分にかかります。
 
 ```scss:components/LoginForm.vue
