@@ -710,7 +710,6 @@ export default class LoginForm extends Vue {}
   position: relative;
   width: $form-width;
 
-
   .glassed-background {
     background: inherit;
     filter: blur(12px) brightness(1.2);
