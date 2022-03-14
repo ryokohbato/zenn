@@ -227,7 +227,7 @@ export default class LoginForm extends Vue {}
 
 3. `clip-path` を用いて背景1をログインフォームと同じ大きさに切り抜く。
 
-![](https://storage.googleapis.com/zenn-user-upload/1062665a7c9e-20220315.png)
+![](https://storage.googleapis.com/zenn-user-upload/d09e51785394-20220315.png)
 
 では手順ごとにコードを追っていきます。重要な部分のみ抜粋して示しますが、以下のアコーディオンからソースコードの全体を確認できます。
 
