@@ -218,8 +218,16 @@ export default class LoginForm extends Vue {}
 おそらくこれが最も思いつきやすく、かつ汎用性も高い案だと思います。[clip-path](https://developer.mozilla.org/ja/docs/Web/CSS/clip-path) は、要素を簡単にクリッピングできるCSSプロパティです。clip-pathを使用して背景効果を与える手順は以下の通りです。
 
 1. 背景を2枚重ね、(説明のために上のものを背景1、下のものを背景2と呼びます) その上にログインフォームを重ねる。
+
+![](https://storage.googleapis.com/zenn-user-upload/b77e4142558b-20220315.png)
+
 2. `filter` を用いて背景2に視覚効果をかける。
+
+![](https://storage.googleapis.com/zenn-user-upload/32661e31aac3-20220315.png)
+
 3. `clip-path` を用いて背景2をログインフォームと同じ大きさに切り抜く。
+
+![](https://storage.googleapis.com/zenn-user-upload/1062665a7c9e-20220315.png)
 
 では手順ごとにコードを追っていきます。重要な部分のみ抜粋して示しますが、以下のアコーディオンからソースコードの全体を確認できます。
 
