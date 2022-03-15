@@ -3,7 +3,7 @@ title: "Firefoxでも動くbackdrop-filterの代替実装"
 emoji: "🦊"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["css"]
-published: false
+published: true
 ---
 
 この記事は[KMCアドベントカレンダー2021](https://adventar.org/calendars/6895)の19日目の記事です。大遅刻です。
