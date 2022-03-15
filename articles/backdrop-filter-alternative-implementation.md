@@ -622,7 +622,6 @@ export default {
     backgroundSize: function () {
       return {
         backgroundSize: `${this.backgroundWidth}px ${this.backgroundHeight}px`,
-        // backgroundSize: `cover`,
       };
     }
   },
