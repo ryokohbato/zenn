@@ -602,7 +602,61 @@ CSSにいくつかポイントがあります。
 }
 ```
 
-`background` プロパティは非継承プロパティなので、[^4] `background: inherit;` を明示的に指定する必要があります。
+`background` プロパティは非継承プロパティなので、[^4] `background: inherit;` を明示的に指定する必要があります。同時に `background` は shorthand property (一括指定プロパティ) [^5] であるため、`background: inherit;` を指定すると背景に関する全てのスタイルが継承されることになります。
+
+`background-size` も当然継承されるため、今回のような場合に `background-size: cover;` を設定してしまうと、子要素の背景は親要素の大きさに合わせて描画されるのではなく、子要素の大きさに合わせて描画されることになります。すなわち、親要素の側で `background-size` の値を正しく計算して設定した上で、それを子要素に継承させる必要があります。画像の横:縦の比が3:4なので、`background-size: cover;` を指定した場合と同じように描画されるように値を算出しています。以下該当部分を示します。
+
+```vue:App.vue
+<script lang="ts">
+import LoginForm from "./components/LoginForm.vue";
+
+export default {
+  data () {
+    return {
+      backgroundHeight: window.innerHeight * 0.75 < window.innerWidth ? window.innerWidth * 4 / 3 : window.innerHeight,
+      backgroundWidth: window.innerHeight * 0.75 < window.innerWidth ? window.innerWidth : window.innerHeight * 0.75,
+    }
+  },
+  computed: {
+    backgroundSize: function () {
+      return {
+        backgroundSize: `${this.backgroundWidth}px ${this.backgroundHeight}px`,
+      };
+    }
+  },
+  methods: {
+    resizeHandler: function () {
+      if (window.innerHeight * 0.75 < window.innerWidth) {
+        this.backgroundHeight = window.innerWidth * 4 / 3;
+        this.backgroundWidth = window.innerWidth;
+      } else {
+        this.backgroundHeight = window.innerHeight;
+        this.backgroundWidth = window.innerHeight * 0.75;
+      }
+    }
+  },
+  mounted () {
+    window.addEventListener('resize', this.resizeHandler);
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.resizeHandler);
+  },
+  components: {
+    LoginForm,
+  },
+}
+</script>
+```
+
+また `background-position` についても、`background-position: center;` を子要素まで継承するのではなく、適切な場所で修正をかけることで正しい位置に画像が描画されるように調整しています。
+
+```scss:components/LoginForm.vue
+.container {
+  background: inherit;
+  // background-position のみ上書き
+  background-position: 50% calc(50% + ((100vh - 500px) / 2 - 60px));
+}
+```
 
 :::details ソースコード全体を確認
 ```vue:App.vue
@@ -805,4 +859,5 @@ export default class LoginForm extends Vue {}
 [^1]: [What is Glassmorphism? Create This New Design Effect Using Only HTML and CSS](https://www.freecodecamp.org/news/glassmorphism-design-effect-with-html-css/)
 [^2]: ["backdrop-filter" | Can I use](https://caniuse.com/?search=backdrop-filter)
 [^3]: [bug 1578503](https://bugzilla.mozilla.org/show_bug.cgi?id=1578503)
-[^4]: [background | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/background#%E5%85%AC%E5%BC%8F%E5%AE%9A%E7%BE%A9)
+[^4]: [background - 公式定義 | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/background#%E5%85%AC%E5%BC%8F%E5%AE%9A%E7%BE%A9)
+[^5]: [一括指定プロパティ | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/Shorthand_properties)
