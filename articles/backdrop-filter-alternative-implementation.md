@@ -21,6 +21,10 @@ published: false
 
 実際にインターネットで検索してみると、CSS を用いたグラスモーフィズムの実装は [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter) を使用する方法ばかりがヒットします。しかし、 `backdrop-filter` はデフォルト設定の場合 Firefox では動きません。[^2] [^3] そこで、`backdrop-filter` を使用せずとも同等の視覚効果を得る方法について考えます。
 
+:::message
+今回紹介する方法は、`backdrop-filter` を使用した実装の全てを置き換えられるものではありません。
+:::
+
 # 本編
 
 今回は例として、`backdrop-filter` を使用せずに以下のようなログインフォームのデザインを作成することにします。Vueを使って書いていますが、素のHTML/CSSでも使える方法です。
@@ -215,7 +219,7 @@ export default class LoginForm extends Vue {}
 
 ## clip-pathを用いた実装
 
-おそらくこれが最も思いつきやすく、かつ汎用性も高い案だと思います。[clip-path](https://developer.mozilla.org/ja/docs/Web/CSS/clip-path) は、要素を簡単にクリッピングできるCSSプロパティです。clip-pathを使用して背景効果を与える手順は以下の通りです。
+おそらくこれが最も思いつきやすく、かつ汎用性も高い方法だと思います。[clip-path](https://developer.mozilla.org/ja/docs/Web/CSS/clip-path) は、要素を簡単にクリッピングできるCSSプロパティです。clip-pathを使用して背景効果を与える手順は以下の通りです。
 
 1. 背景を2枚重ね、(説明のために上のものを背景1、下のものを背景2と呼びます) その上にログインフォームを重ねる。
 
