@@ -72,9 +72,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Get parent hash
-        run: echo "PARENT_HASH=$(git rev-parse HEAD^@)" >> $GITHUB_ENV
+        run: echo "PARENT_COUNT=$(git rev-parse HEAD^@ | wc -l)" >> $GITHUB_ENV
       - name: Create template issue
-        if: env.PARENT_HASH == ''
+        if: env.PARENT_COUNT == 0
         # 以下、リポジトリ新規作成にのみ実行させる処理を記載
 ```
 
@@ -97,11 +97,11 @@ $ git log --pretty=oneline | grep -c ''
 $ git rev-parse HEAD^@
 ```
 
-`HEAD^@` は、最も初めの commit を表しており[^5]、このコマンドの出力は1番最初の commit の hash を返します。このコマンドは commit が1つしかない場合のみ `""` を返すため、commit 数が1つであるかを判定するのに使用できます。今回は `git rev-parse` をワークフローに使用しています。
+`HEAD^@` は、親 commit 全てを表しており[^5]、このコマンドの出力は全ての親 commit の hash を列挙して返します。このコマンドは commit が1つしかない場合のみ `""` を返すため、commit 数が1つであるかを判定するのに使用できます。今回は `git rev-parse` をワークフローに使用しています。
 
-続いて2ステップ目を確認します。ここでは `$GITHUB_ENV` を使用し[^6]、環境変数 `PARENT_HASH` に最初の commit の hash を入れています。
+続いて2ステップ目を確認します。ここでは `$GITHUB_ENV` を使用し[^6]、環境変数 `PARENT_COUNT` に列挙された親 commit の数を入れています。
 
-最後に `if` [^7]を用いて、環境変数 `PARENT_HASH` を評価[^8]しています。先ほど述べた通り、リポジトリ新規作成時のみ `PARENT_HASH` が空白になります。
+最後に `if` [^7]を用いて、環境変数 `PARENT_COUNT` を評価[^8]しています。`git rev-parse` の出力はリポジトリ新規作成時のみ `""` となるのに対し、一般的な commit では1行、merge commit では複数行になります。よってその行数の差を利用して判定します。
 
 # 2. GitHub Actions を利用して Issue を立てる
 
@@ -143,9 +143,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Get parent hash
-        run: echo "PARENT_HASH=$(git rev-parse HEAD^@)" >> $GITHUB_ENV
+        run: echo "PARENT_COUNT=$(git rev-parse HEAD^@ | wc -l)" >> $GITHUB_ENV
       - name: Create template issue
-        if: env.PARENT_HASH == ''
+        if: env.PARENT_COUNT == 0
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -170,9 +170,9 @@ jobs:
          with:
            fetch-depth: 0
        - name: Get parent hash
-         run: echo "PARENT_HASH=$(git rev-parse HEAD^@)" >> $GITHUB_ENV
+         run: echo "PARENT_COUNT=$(git rev-parse HEAD^@ | wc -l)" >> $GITHUB_ENV
        - name: Create template issue
-         if: env.PARENT_HASH == ''
+         if: env.PARENT_COUNT == 0
 -        # 以下、リポジトリ新規作成にのみ実行させる処理を記載
 +        uses: JasonEtco/create-an-issue@v2
 +        env:
@@ -194,21 +194,21 @@ jobs:
 
 ```yaml
       - name: Create first template issue
-        if: env.PARENT_HASH == ''
+        if: env.PARENT_COUNT == 0
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           filename: .github/issues/issue-1.md
       - name: Create second template issue
-        if: env.PARENT_HASH == ''
+        if: env.PARENT_COUNT == 0
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           filename: .github/issues/issue-2.md
       - name: Create third template issue
-        if: env.PARENT_HASH == ''
+        if: env.PARENT_COUNT == 0
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -242,9 +242,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Get parent hash
-        run: echo "PARENT_HASH=$(git rev-parse HEAD^@)" >> $GITHUB_ENV
+        run: echo "PARENT_COUNT=$(git rev-parse HEAD^@ | wc -l)" >> $GITHUB_ENV
       - name: Create template issue
-        if: env.PARENT_HASH == ''
+        if: env.PARENT_COUNT == 0
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -272,9 +272,9 @@ jobs:
          with:
            fetch-depth: 0
        - name: Get parent hash
-         run: echo "PARENT_HASH=$(git rev-parse HEAD^@)" >> $GITHUB_ENV
+         run: echo "PARENT_COUNT=$(git rev-parse HEAD^@ | wc -l)" >> $GITHUB_ENV
        - name: Create template issue
-         if: env.PARENT_HASH == ''
+         if: env.PARENT_COUNT == 0
          uses: JasonEtco/create-an-issue@v2
          env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
