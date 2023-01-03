@@ -3,7 +3,7 @@ title: "リポジトリ作成時に自動でIssueを立てるには"
 emoji: "🤖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["github", "githubactions", "ci"]
-published: false
+published: true
 ---
 
 この記事は [KMCアドベントカレンダー2022](https://adventar.org/calendars/8005) の22日目の記事です。ギリ遅刻です。
